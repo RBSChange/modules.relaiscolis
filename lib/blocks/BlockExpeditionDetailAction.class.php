@@ -40,16 +40,8 @@ class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDe
 		$relay = null;
 		
 		$soapClient = $this->param['soapClient'];
-		
 		$params = array('xETTCode' => $this->param['relayCode']);
-		// 		$resultSoap = $soapClient->dropOffPoint($params);
-		// 		$result = $resultSoap->DropOffPoint;
-		// 		var_dump($result);
 		
-
-		// 		$relay = mondialrelay_MondialrelaymodeService::getInstance()->getRelayFromSoapObject($result);
-		
-
 		return $relay;
 	}
 	
