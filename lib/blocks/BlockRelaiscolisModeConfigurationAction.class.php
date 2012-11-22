@@ -5,10 +5,9 @@
  */
 class relaiscolis_BlockRelaiscolisModeConfigurationAction extends shipping_BlockRelayModeConfigurationAction
 {
-	
 	/**
 	 * Return the list of shipping_Relay
-	 * @return array<shipping_Relay>
+	 * @return shipping_Relay[]
 	 */
 	protected function buildRelayList()
 	{
@@ -35,15 +34,12 @@ class relaiscolis_BlockRelaiscolisModeConfigurationAction extends shipping_Block
 		$resultSoap = $soapClient->dropOffPoints($params);
 		$result = $resultSoap->DropOffPoint;
 		
-
+		$relays = array();
 		foreach ($result as $item)
 		{
 			$relay = relaiscolis_RelaiscolismodeService::getInstance()->getRelayFromSoapObject($item);
 			$relays[] = $relay;
 		}
-		
 		return $relays;
-	
 	}
-
 }

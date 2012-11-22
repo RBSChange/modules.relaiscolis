@@ -152,8 +152,8 @@ class relaiscolis_RelaiscolismodeService extends shipping_RelayModeService
 		}
 		else
 		{
-			$result = $ls->transFO('m.shipping.general.opening-hours', array('ucf'), array('hour1' => $hours[0], 'hour2' => $hours[1]));
-			
+			$result = $ls->transFO('m.shipping.general.opening-hours', array('ucf'), array('hour1' => $hours[0], 
+				'hour2' => $hours[1]));
 			if ($hours[2] != '00:00')
 			{
 				$result .= ' ';
@@ -165,5 +165,4 @@ class relaiscolis_RelaiscolismodeService extends shipping_RelayModeService
 		
 		return $result;
 	}
-
 }

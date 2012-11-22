@@ -5,7 +5,9 @@
  */
 class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDetailAction
 {
-	
+	/**
+	 * Initialize $this->param
+	 */
 	protected function init()
 	{
 		$shippingAdress = $this->expedition->getAddress();
@@ -32,9 +34,11 @@ class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDe
 		$header = new SoapHeader("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", $authvars);
 		$soapClient->__setSOAPHeaders(array($header));
 		$this->param['soapClient'] = $soapClient;
-	
 	}
 	
+	/**
+	 * @return shipping_Relay
+	 */
 	protected function getRelayDetail()
 	{
 		$relay = null;
@@ -45,6 +49,10 @@ class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDe
 		return $relay;
 	}
 	
+	/**
+	 * @param string $trackingNumber
+	 * @return array
+	 */
 	protected function getTrackingDetail($trackingNumber)
 	{
 		$result = array();
@@ -116,5 +124,4 @@ class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDe
 		
 		return $result;
 	}
-
 }
