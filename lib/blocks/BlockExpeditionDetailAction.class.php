@@ -57,69 +57,84 @@ class relaiscolis_BlockExpeditionDetailAction extends shipping_BlockExpeditionDe
 	{
 		$result = array();
 		
-		$ls = LocaleService::getInstance();
-		$soapClient = $this->param['soapClient'];
-		
-		$params = array('parcelNumber' => $trackingNumber);
-		$resultSoap = $soapClient->trackingByConsignment($params);
-		
-		$result['steps'] = array();
-		
-		$events = $resultSoap->Parcel->events;
-		
-		if ($events->requestDate)
+		if ($trackingNumber != null && $trackingNumber != '')
 		{
-			$dateEvent = date_Calendar::getInstance($events->requestDate);
-			$step = array();
-			$step['label'] = $ls->transFO('m.relaiscolis.general.request', array('ucf'));
-			$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
-			$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
-			$step['place'] = '';
-			$result['steps'][] = $step;
-		}
+			$ls = LocaleService::getInstance();
+			$soapClient = $this->param['soapClient'];
+			
+			$params = array('parcelNumber' => $trackingNumber);
+			$resultSoap = null;
+			try
+			{
+				$resultSoap = $soapClient->trackingByConsignment($params);
+			}
+			catch (Exception $e)
+			{
+				Framework::exception($e);
+			}
+			
+			if ($resultSoap != null)
+			{
+				$result['steps'] = array();
+				
+				$events = $resultSoap->Parcel->events;
+				
+				if ($events->requestDate)
+				{
+					$dateEvent = date_Calendar::getInstance($events->requestDate);
+					$step = array();
+					$step['label'] = $ls->transFO('m.relaiscolis.general.request', array('ucf'));
+					$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
+					$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
+					$step['place'] = '';
+					$result['steps'][] = $step;
+				}
+				
+				if ($events->processDate)
+				{
+					$dateEvent = date_Calendar::getInstance($events->processDate);
+					$step = array();
+					$step['label'] = $ls->transFO('m.relaiscolis.general.process', array('ucf'));
+					$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
+					$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
+					$step['place'] = $events->processCenter;
+					$result['steps'][] = $step;
+				}
+				
+				if ($events->arrivalDate)
+				{
+					$dateEvent = date_Calendar::getInstance($events->arrivalDate);
+					$step = array();
+					$step['label'] = $ls->transFO('m.relaiscolis.general.arrival', array('ucf'));
+					$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
+					$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
+					$step['place'] = $events->arrivalCenter;
+					$result['steps'][] = $step;
+				}
+				
+				if ($events->deliveryDepartureDate)
+				{
+					$dateEvent = date_Calendar::getInstance($events->deliveryDepartureDate);
+					$step = array();
+					$step['label'] = $ls->transFO('m.relaiscolis.general.delivery-departure', array('ucf'));
+					$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
+					$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
+					$step['place'] = $events->deliveryDepartureCenter;
+					$result['steps'][] = $step;
+				}
+				
+				if ($events->deliveryDate)
+				{
+					$dateEvent = date_Calendar::getInstance($events->deliveryDate);
+					$step = array();
+					$step['label'] = $ls->transFO('m.relaiscolis.general.delivery', array('ucf'));
+					$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
+					$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
+					$step['place'] = '';
+					$result['steps'][] = $step;
+				}
+			}
 		
-		if ($events->processDate)
-		{
-			$dateEvent = date_Calendar::getInstance($events->processDate);
-			$step = array();
-			$step['label'] = $ls->transFO('m.relaiscolis.general.process', array('ucf'));
-			$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
-			$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
-			$step['place'] = $events->processCenter;
-			$result['steps'][] = $step;
-		}
-		
-		if ($events->arrivalDate)
-		{
-			$dateEvent = date_Calendar::getInstance($events->arrivalDate);
-			$step = array();
-			$step['label'] = $ls->transFO('m.relaiscolis.general.arrival', array('ucf'));
-			$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
-			$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
-			$step['place'] = $events->arrivalCenter;
-			$result['steps'][] = $step;
-		}
-		
-		if ($events->deliveryDepartureDate)
-		{
-			$dateEvent = date_Calendar::getInstance($events->deliveryDepartureDate);
-			$step = array();
-			$step['label'] = $ls->transFO('m.relaiscolis.general.delivery-departure', array('ucf'));
-			$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
-			$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
-			$step['place'] = $events->deliveryDepartureCenter;
-			$result['steps'][] = $step;
-		}
-		
-		if ($events->deliveryDate)
-		{
-			$dateEvent = date_Calendar::getInstance($events->deliveryDate);
-			$step = array();
-			$step['label'] = $ls->transFO('m.relaiscolis.general.delivery', array('ucf'));
-			$step['date'] = date_Formatter::format($dateEvent, 'd/m/Y');
-			$step['hour'] = date_Formatter::format($dateEvent, 'H:i');
-			$step['place'] = '';
-			$result['steps'][] = $step;
 		}
 		
 		return $result;

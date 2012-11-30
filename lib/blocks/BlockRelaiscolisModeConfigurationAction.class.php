@@ -31,15 +31,27 @@ class relaiscolis_BlockRelaiscolisModeConfigurationAction extends shipping_Block
 		
 		$params = array('zipCode' => $this->param['zipcode'], 'city' => $this->param['city']);
 		
-		$resultSoap = $soapClient->dropOffPoints($params);
-		$result = $resultSoap->DropOffPoint;
-		
-		$relays = array();
-		foreach ($result as $item)
+		try
 		{
-			$relay = relaiscolis_RelaiscolismodeService::getInstance()->getRelayFromSoapObject($item);
-			$relays[] = $relay;
+			$resultSoap = $soapClient->dropOffPoints($params);
 		}
+		catch (Exception $e)
+		{
+			Framework::exception($e);
+		}
+		
+		if ($resultSoap != null)
+		{
+			$result = $resultSoap->DropOffPoint;
+			
+			$relays = array();
+			foreach ($result as $item)
+			{
+				$relay = relaiscolis_RelaiscolismodeService::getInstance()->getRelayFromSoapObject($item);
+				$relays[] = $relay;
+			}
+		}
+		
 		return $relays;
 	}
 }
