@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.relaiscolis.document.relaiscolismode" lcid="fr_FR">
   <include id="m.shipping.document.mode"/>
+  <key id="document-name">livraison Relais Colis</key>
   <key id="username">identifiant relais colis</key>
   <key id="password">mot de passe</key>
 </i18n>
